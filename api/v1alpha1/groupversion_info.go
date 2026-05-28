@@ -29,6 +29,10 @@ var (
 	GroupVersion = schema.GroupVersion{Group: "sync.secrets-bridge.io", Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme.
+	//
+	//nolint:staticcheck // SA1019: scheme.Builder is the kubebuilder-generated
+	// pattern; runtime.NewSchemeBuilder doesn't compose with the generated
+	// SchemeBuilder.Register(&Type{}, ...) call in secretssync_types.go.
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
 
 	// AddToScheme adds the types in this group-version to the given scheme.
