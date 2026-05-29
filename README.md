@@ -1,3 +1,14 @@
+<p align="center">
+  <a href="https://github.com/secrets-bridge"><img src="https://raw.githubusercontent.com/secrets-bridge/.github/main/profile/logo.svg" alt="Secrets Bridge" width="520" /></a>
+</p>
+
+<p align="center">
+  <b>The brain behind your secrets.</b><br/>
+  Unified secrets control plane for cloud-native teams.<br/>
+  <a href="https://secrets-bridge.io">secrets-bridge.io</a> · <a href="https://github.com/secrets-bridge">all repos</a>
+</p>
+
+---
 # secrets-bridge / controller
 
 **Kubernetes operator + CRDs for [Secrets Bridge](https://github.com/secrets-bridge)** — written with kubebuilder + controller-runtime. Reconciles the `sync.secrets-bridge.io/v1alpha1` `SecretsSync` CRD and dispatches sync work via the [`core`](https://github.com/secrets-bridge/core) provider abstraction.
