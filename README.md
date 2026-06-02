@@ -17,8 +17,10 @@
 
 | Issue | Step | Status |
 |---|---|---|
-| [#1](https://github.com/secrets-bridge/controller/issues/1) | Migrate v0.1.0 operator onto core | **this PR** |
+| [#1](https://github.com/secrets-bridge/controller/issues/1) | Migrate v0.1.0 operator onto core | ✅ merged |
 | [#2](https://github.com/secrets-bridge/controller/issues/2) | GitOps CRD integration (Flow 4) | open |
+
+The api-side GitOps **observation** integration (BRD §26 — read-only ArgoCD visibility tied to the request lifecycle) shipped via [`secrets-bridge/api#25`](https://github.com/secrets-bridge/api/pull/25) + [`secrets-bridge/worker#3`](https://github.com/secrets-bridge/worker/pull/3) (opt-in, gated on `SB_GITOPS_ENABLED`). This controller's separate GitOps CRD integration (Flow 4) tracks a different surface — pulling `SecretsSync` declarations from GitOps repos rather than admin endpoints.
 
 ## Architecture
 
