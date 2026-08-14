@@ -11,7 +11,7 @@
 ---
 # secrets-bridge / controller
 
-**Kubernetes operator + CRDs for [Secrets Bridge](https://github.com/secrets-bridge)** — written with kubebuilder + controller-runtime. Reconciles the `sync.secrets-bridge.io/v1alpha1` `SecretsSync` CRD and dispatches sync work via the [`core`](https://github.com/secrets-bridge/core) provider abstraction.
+**Kubernetes operator + CRDs for [Secrets Bridge](https://github.com/secrets-bridge)**. Written with kubebuilder + controller-runtime. Reconciles the `sync.secrets-bridge.io/v1alpha1` `SecretsSync` CRD and dispatches sync work via the [`core`](https://github.com/secrets-bridge/core) provider abstraction.
 
 ## Status
 
@@ -20,11 +20,11 @@
 | [#1](https://github.com/secrets-bridge/controller/issues/1) | Migrate v0.1.0 operator onto core | ✅ merged |
 | [#2](https://github.com/secrets-bridge/controller/issues/2) | GitOps CRD integration (Flow 4) | open |
 
-The api-side GitOps **observation** integration (BRD §26 — read-only ArgoCD visibility tied to the request lifecycle) shipped via [`secrets-bridge/api#25`](https://github.com/secrets-bridge/api/pull/25) + [`secrets-bridge/worker#3`](https://github.com/secrets-bridge/worker/pull/3) (opt-in, gated on `SB_GITOPS_ENABLED`). This controller's separate GitOps CRD integration (Flow 4) tracks a different surface — pulling `SecretsSync` declarations from GitOps repos rather than admin endpoints.
+The api-side GitOps **observation** integration (BRD §26: read-only ArgoCD visibility tied to the request lifecycle) shipped via [`secrets-bridge/api#25`](https://github.com/secrets-bridge/api/pull/25) + [`secrets-bridge/worker#3`](https://github.com/secrets-bridge/worker/pull/3) (opt-in, gated on `SB_GITOPS_ENABLED`). This controller's separate GitOps CRD integration (Flow 4) tracks a different surface: it pulls `SecretsSync` declarations from GitOps repos rather than admin endpoints.
 
 ## Architecture
 
-The controller imports **only** `core/providers` — never `api/pkg/storage`, `api/pkg/runtime`, or any Control Plane internal — per the polyrepo dependency rule. Reading and writing actual secret values is the **agent**'s job per BRD §12.4; this controller:
+The controller imports **only** `core/providers`, never `api/pkg/storage`, `api/pkg/runtime`, or any Control Plane internal, per the polyrepo dependency rule. Reading and writing actual secret values is the **agent**'s job per BRD §12.4; this controller:
 
 1. Watches `SecretsSync` CRs
 2. Validates the CR by resolving source + destination providers from the Registry
@@ -74,7 +74,7 @@ config/samples/            example SecretsSync CR
 
 ## Hard rules (per CLAUDE.md)
 
-- Imports `core/providers` only. **No** `api/pkg/storage`, **no** Redis client, **no** Postgres driver.
+- Imports `core/providers` only. No `api/pkg/storage`, no Redis client, no Postgres driver.
 - No secret values in CR status, conditions, events, or logs.
 - Operator runs as `nonroot` on `distroless/static`.
 
