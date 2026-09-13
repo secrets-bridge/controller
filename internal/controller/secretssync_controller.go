@@ -56,7 +56,14 @@ type SecretsSyncReconciler struct {
 // +kubebuilder:rbac:groups=sync.secrets-bridge.io,resources=secretssyncs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=sync.secrets-bridge.io,resources=secretssyncs/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=sync.secrets-bridge.io,resources=secretssyncs/finalizers,verbs=update
-// +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch
+//
+// No core/v1 Secret RBAC is declared here on purpose (security assessment
+// CTL-01 / H5): this reconciler only validates that Spec.Source and
+// Spec.Destination resolve via the Providers registry — it never Gets,
+// Lists, or Watches a corev1.Secret, and ProviderRef.CredentialsSecretRef
+// is not dereferenced anywhere in this package. If a future change wires
+// CredentialsSecretRef up, add a narrowly-scoped Role (not a ClusterRole)
+// for just the namespaces that need it, and add the marker back here.
 
 // Reconcile is the entry point for each SecretsSync event.
 //
