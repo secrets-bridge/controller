@@ -47,9 +47,15 @@ const (
 // ProviderRef points at a backend by name + opaque config map. The Provider
 // package interprets `config` (region/url/role/etc.) in its own way.
 type ProviderRef struct {
-	// Type is the registered provider name.
+	// Type is the registered provider name. Must match a kind registered in
+	// the operator's providers.Registry (see cmd/main.go) — today that is
+	// "aws-sm" (AWS Secrets Manager) and "vault" (HashiCorp Vault). GCP and
+	// Azure connectors are not implemented yet (BRD Phase 7+); adding one
+	// means registering its factory in cmd/main.go AND adding its kind
+	// string here in the same change, so the CRD can never admit a Type
+	// the registry will reject at reconcile time.
 	//
-	// +kubebuilder:validation:Enum=aws;gcp;azure;vault
+	// +kubebuilder:validation:Enum=aws-sm;vault
 	Type string `json:"type"`
 
 	// Config is a free-form bag of provider-specific settings (region,
