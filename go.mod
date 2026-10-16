@@ -3,7 +3,7 @@ module github.com/secrets-bridge/controller
 go 1.26.0
 
 require (
-	github.com/secrets-bridge/core v0.0.0-20261016000132-9c531a273e38
+	github.com/secrets-bridge/core v0.0.0-20261016115345-52e0e4e4d19b
 	k8s.io/api v0.36.1
 	k8s.io/apimachinery v0.36.1
 	k8s.io/client-go v0.36.1
