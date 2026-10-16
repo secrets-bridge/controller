@@ -4,7 +4,7 @@
 # image is distroless/static so the final container has no shell, no
 # package manager, and runs as a non-root UID by default.
 
-FROM golang:1.26-alpine AS build
+FROM golang:1.27.2-alpine@sha256:f92b6ef800e499660581efdabdf25d9d817a9d124eaf900924f0504e7e27e12d AS build
 WORKDIR /src
 
 COPY go.mod go.sum* ./
@@ -20,7 +20,7 @@ RUN CGO_ENABLED=0 GOOS=linux \
       -o /out/manager \
       ./cmd
 
-FROM gcr.io/distroless/static-debian12:nonroot
+FROM gcr.io/distroless/static:nonroot@sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3
 COPY --from=build /out/manager /usr/local/bin/manager
 USER nonroot:nonroot
 ENTRYPOINT ["/usr/local/bin/manager"]
