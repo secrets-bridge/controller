@@ -29,7 +29,7 @@ The controller imports **only** `core/providers`, never `api/pkg/storage`, `api/
 1. Watches `SecretsSync` CRs
 2. Validates the CR by resolving source + destination providers from the Registry
 3. Surfaces a `Ready` condition on `.status.conditions`
-4. Re-queues every `spec.refreshInterval` (default 5m)
+4. Re-queues every `spec.refreshInterval` (default 5m, minimum 30s)
 
 Once the agent registration loop ([secrets-bridge/agent#1](https://github.com/secrets-bridge/agent/issues/1)) and the job loop ([#2](https://github.com/secrets-bridge/agent/issues/2)) land, the controller will dispatch sync jobs to the Control Plane API which the agent then claims and executes inside the target boundary.
 
@@ -60,6 +60,8 @@ spec:
 ```
 
 See [`core/providers/{vault,awssecretsmanager}`](https://github.com/secrets-bridge/core/tree/main/providers) for the full list of accepted config keys per provider.
+
+Config keys that carry a credential or point at one (`token`, `kubernetesTokenPath`) are refused with `Ready=False`, reason `CredentialConfigRejected`, before any provider is contacted. The controller authenticates with its own workload identity. When a provider can't be built, the condition says which side failed (reason `ProviderError`) and the error details go to the controller logs, not to status.
 
 ## Layout
 

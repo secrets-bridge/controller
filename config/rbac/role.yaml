@@ -9,24 +9,13 @@ rules:
   resources:
   - secretssyncs
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
-- apiGroups:
-  - sync.secrets-bridge.io
-  resources:
-  - secretssyncs/finalizers
-  verbs:
-  - update
 - apiGroups:
   - sync.secrets-bridge.io
   resources:
   - secretssyncs/status
   verbs:
-  - get
   - patch
   - update

@@ -149,7 +149,7 @@ func TestReconcile_UnregisteredSource_SetsReadyFalse(t *testing.T) {
 	}
 }
 
-func TestReconcile_FailingDestinationFactory_SurfacesError(t *testing.T) {
+func TestReconcile_FailingDestinationFactory_GenericStatus(t *testing.T) {
 	cr := sampleCR("bad-dest")
 
 	r := providers.NewRegistry()
@@ -167,10 +167,17 @@ func TestReconcile_FailingDestinationFactory_SurfacesError(t *testing.T) {
 	if ready == nil || ready.Status != metav1.ConditionFalse {
 		t.Fatalf("expected Ready=False, got %+v", ready)
 	}
-	// The factory's actual error text must be surfaced so operators
-	// can diagnose without digging through pod logs.
-	if !contains(ready.Message, "invalid kubernetesRole") {
-		t.Fatalf("error message not propagated: %q", ready.Message)
+	if ready.Reason != "ProviderError" {
+		t.Fatalf("Reason: got %q want ProviderError", ready.Reason)
+	}
+	// Provider error text can carry a remote response body, so status
+	// gets a generic message naming the failing side; the details go
+	// to the controller logs (CTL-N-01).
+	if contains(ready.Message, "invalid kubernetesRole") {
+		t.Fatalf("provider error text copied into status: %q", ready.Message)
+	}
+	if !contains(ready.Message, "destination") {
+		t.Fatalf("message should name the failing side: %q", ready.Message)
 	}
 }
 

@@ -1,4 +1,7 @@
 # permissions to do leader election.
+# controller-runtime defaults to a Lease lock, and client-go's LeaseLock
+# only calls Get, Create and Update. ConfigMaps are not used (CTL-N-02).
+# Events: the leader election recorder posts core/v1 events.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -8,29 +11,13 @@ metadata:
   name: leader-election-role
 rules:
 - apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
   - coordination.k8s.io
   resources:
   - leases
   verbs:
   - get
-  - list
-  - watch
   - create
   - update
-  - patch
-  - delete
 - apiGroups:
   - ""
   resources:

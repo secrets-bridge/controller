@@ -11,6 +11,19 @@ on `main`.
 
 ## [Unreleased]
 
+### Security
+- `SecretsSync` config keys `token` and `kubernetesTokenPath` are refused
+  (`Ready=False`, reason `CredentialConfigRejected`) before any provider
+  is built, so a CR can no longer make the controller send a token file
+  to an address it names.
+- Provider error text no longer goes into `.status.conditions`; status
+  gets a generic message and the logs get a one-line summary.
+- `spec.refreshInterval` must be at least `30s` (CRD rule, `0s` still
+  means the default); the reconciler clamps older objects.
+- RBAC trimmed: get/list/watch on `secretssyncs`, update/patch on
+  `secretssyncs/status`, no finalizers rule; leader election keeps
+  leases (get/create/update) and events only, no ConfigMaps.
+
 ### Added
 - Docker image publishing workflow — multi-arch (amd64 + arm64),
   pushed to `ghcr.io/secrets-bridge/controller`. Tags: rolling `dev`
