@@ -119,8 +119,11 @@ type SecretsSyncSpec struct {
 
 	// RefreshInterval is how often the controller re-reconciles even when
 	// there are no Kubernetes events. Use a duration string like "5m".
-	// Default: "5m".
+	// Must be at least "30s". Default: "5m". "0s" is accepted and means
+	// the default, because Go clients send the zero value when the field
+	// is left unset.
 	// +kubebuilder:default="5m"
+	// +kubebuilder:validation:XValidation:rule="duration(self) == duration('0s') || duration(self) >= duration('30s')",message="refreshInterval must be a duration of at least 30s"
 	// +optional
 	RefreshInterval metav1.Duration `json:"refreshInterval,omitempty"`
 
